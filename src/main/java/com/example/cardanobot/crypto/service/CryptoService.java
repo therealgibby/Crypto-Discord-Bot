@@ -1,11 +1,12 @@
 package com.example.cardanobot.crypto.service;
 
-
 import com.example.cardanobot.crypto.model.Currency;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.javacord.api.entity.activity.ActivityType;
+import org.javacord.api.event.message.MessageCreateEvent;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -78,9 +79,14 @@ public class CryptoService {
         }
     }
 
-    public void setCryptoType(Type cryptoType) {
+    public void setCryptoType(Type cryptoType, MessageCreateEvent event) {
         this.cryptoType = cryptoType;
         makeCryptoObject();
+        updateActivity(event);
+    }
+
+    private void updateActivity(MessageCreateEvent event) {
+        event.getApi().updateActivity(ActivityType.WATCHING, getCurrency().getName() + ": $" + getCurrency().getPrice());
     }
 
     public Type getCryptoType() {

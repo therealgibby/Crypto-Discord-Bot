@@ -2,7 +2,6 @@ package com.example.cardanobot.listeners.implementations;
 
 import com.example.cardanobot.crypto.service.CryptoService;
 import com.example.cardanobot.listeners.CryptoTypeListener;
-import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,25 +18,16 @@ public class CryptoTypeListenerImpl implements CryptoTypeListener {
         String messageContent = messageCreateEvent.getMessageContent().toLowerCase();
 
         if((messageContent.equals("!btc") || messageContent.equals("!bitcoin")) && cryptoService.getCryptoType() != CryptoService.Type.BTC) {
-            cryptoService.setCryptoType(CryptoService.Type.BTC);
-            updateActivity(messageCreateEvent);
+            cryptoService.setCryptoType(CryptoService.Type.BTC, messageCreateEvent);
         }
         if((messageContent.equals("!eth") || messageContent.equals("!ethereum")) && cryptoService.getCryptoType() != CryptoService.Type.ETH) {
-            cryptoService.setCryptoType(CryptoService.Type.ETH);
-            updateActivity(messageCreateEvent);
+            cryptoService.setCryptoType(CryptoService.Type.ETH, messageCreateEvent);
         }
         if((messageContent.equals("!ada") || messageContent.equals("!cardano")) && cryptoService.getCryptoType() != CryptoService.Type.ADA) {
-            cryptoService.setCryptoType(CryptoService.Type.ADA);
-            updateActivity(messageCreateEvent);
+            cryptoService.setCryptoType(CryptoService.Type.ADA, messageCreateEvent);
         }
         if((messageContent.equals("!doge") || messageContent.equals("!dogecoin")) && cryptoService.getCryptoType() != CryptoService.Type.DOGE) {
-            cryptoService.setCryptoType(CryptoService.Type.DOGE);
-            updateActivity(messageCreateEvent);
+            cryptoService.setCryptoType(CryptoService.Type.DOGE, messageCreateEvent);
         }
-    }
-
-    private void updateActivity(MessageCreateEvent messageCreateEvent) {
-        messageCreateEvent.getApi()
-                .updateActivity(ActivityType.WATCHING, cryptoService.getCurrency().getName() + ": $" + cryptoService.getCurrency().getPrice());
     }
 }
