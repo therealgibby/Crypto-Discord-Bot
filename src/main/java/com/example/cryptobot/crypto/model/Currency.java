@@ -1,4 +1,4 @@
-package com.example.cardanobot.crypto.model;
+package com.example.cryptobot.crypto.model;
 
 public class Currency {
 

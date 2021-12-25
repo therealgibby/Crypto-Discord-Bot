@@ -1,7 +1,7 @@
-package com.example.cardanobot;
+package com.example.cryptobot;
 
-import com.example.cardanobot.crypto.service.CryptoService;
-import com.example.cardanobot.listeners.CryptoTypeListener;
+import com.example.cryptobot.crypto.service.CryptoService;
+import com.example.cryptobot.listeners.CryptoTypeListener;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutionException;
 
 @SpringBootApplication
 @EnableScheduling
-public class CardanobotApplication {
+public class CryptoBotApplication {
 
 	@Autowired
 	private Environment env;
@@ -31,7 +31,7 @@ public class CardanobotApplication {
 	private CryptoTypeListener cryptoTypeListener;
 
 	public static void main(String[] args) {
-		SpringApplication.run(CardanobotApplication.class, args);
+		SpringApplication.run(CryptoBotApplication.class, args);
 	}
 
 	@Bean

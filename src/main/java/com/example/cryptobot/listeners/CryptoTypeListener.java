@@ -1,4 +1,4 @@
-package com.example.cardanobot.listeners;
+package com.example.cryptobot.listeners;
 
 import org.javacord.api.listener.message.MessageCreateListener;
 

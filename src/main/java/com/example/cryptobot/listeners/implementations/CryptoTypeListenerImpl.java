@@ -1,7 +1,7 @@
-package com.example.cardanobot.listeners.implementations;
+package com.example.cryptobot.listeners.implementations;
 
-import com.example.cardanobot.crypto.service.CryptoService;
-import com.example.cardanobot.listeners.CryptoTypeListener;
+import com.example.cryptobot.crypto.service.CryptoService;
+import com.example.cryptobot.listeners.CryptoTypeListener;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
