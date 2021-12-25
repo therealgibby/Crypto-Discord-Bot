@@ -32,9 +32,9 @@ public class CryptoService {
     }
 
     private static final String CRYPTO_URL = "https://api.coinstats.app/public/v1/coins?skip=0&limit=20&currency=USD";
-    HttpClient client = HttpClient.newHttpClient();
-    HttpRequest request = HttpRequest.newBuilder().uri(URI.create(CRYPTO_URL)).build();
-    HttpResponse<String> response = null;
+    private final HttpClient client = HttpClient.newHttpClient();
+    private final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(CRYPTO_URL)).build();
+    private HttpResponse<String> response = null;
 
     private Currency currency;
     private Type cryptoType = Type.BTC;
