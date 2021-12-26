@@ -34,12 +34,13 @@ public class CryptoService {
     private static final String CRYPTO_URL = "https://api.coinstats.app/public/v1/coins?skip=0&limit=20&currency=USD";
     private final HttpClient client = HttpClient.newHttpClient();
     private final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(CRYPTO_URL)).build();
-    private HttpResponse<String> response = null;
 
     private Currency currency;
     private Type cryptoType = Type.BTC;
 
-    private void receiveResponse() {
+    private HttpResponse<String> createResponse() {
+        HttpResponse<String> response = null;
+
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException e) {
@@ -47,10 +48,12 @@ public class CryptoService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        return response;
     }
 
     // finds the correct cryptocurrency
-    private JsonObject createJsonObject() {
+    private JsonObject createJsonObject(HttpResponse<String> response) {
+        
         // first parse response
         JsonElement element = JsonParser.parseString(response.body());
 
@@ -74,10 +77,10 @@ public class CryptoService {
     public void createCryptoObject() {
 
         // call public api for information on the cryptocurrency
-        receiveResponse();
+        HttpResponse<String> response = createResponse();
 
         // create the json object of the currency
-        JsonObject jsonCurrency = createJsonObject();
+        JsonObject jsonCurrency = createJsonObject(response);
 
         // create currency object
         Currency currency = new Currency();
