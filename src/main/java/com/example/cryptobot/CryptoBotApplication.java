@@ -45,10 +45,4 @@ public class CryptoBotApplication {
 
 		return api;
 	}
-
-	@Scheduled(fixedRate = 12500)
-	public void updateBotStatus() throws IOException, InterruptedException, ExecutionException {
-		discordApi().updateActivity(ActivityType.WATCHING, cryptoService.getCurrency().getName() + ": $" + cryptoService.getCurrency().getPrice());
-	}
-
 }

@@ -1,16 +1,14 @@
 package com.example.cryptobot.crypto.service;
 
 import com.example.cryptobot.crypto.model.Currency;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -38,6 +36,9 @@ public class CryptoService {
     private Currency currency;
     private Type cryptoType = Type.BTC;
 
+    // use event to get discord api
+    private MessageCreateEvent event;
+
     private HttpResponse<String> createResponse() {
         HttpResponse<String> response = null;
 
@@ -48,14 +49,27 @@ public class CryptoService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         return response;
     }
 
     // finds the correct cryptocurrency
     private JsonObject createJsonObject(HttpResponse<String> response) {
-        
-        // first parse response
-        JsonElement element = JsonParser.parseString(response.body());
+
+        JsonElement element = null;
+
+        // if response is null
+        if(response == null) {
+            try {
+                // first parse response
+                element = JsonParser.parseReader(new FileReader("src/main/resources/response.json"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // first parse response
+            element = JsonParser.parseString(response.body());
+        }
 
         // next get as json object
         JsonObject jsonObject = element.getAsJsonObject();
@@ -72,6 +86,7 @@ public class CryptoService {
         return currencyJsonObj;
     }
 
+    // use json object to create currency object
     @PostConstruct
     @Scheduled(fixedRate = 25000)
     public void createCryptoObject() {
@@ -92,11 +107,15 @@ public class CryptoService {
         String cardanoPriceStr = new DecimalFormat("0.000").format(jsonCurrency.get("price").getAsDouble());
         currency.setPrice(Double.parseDouble(cardanoPriceStr));
 
+        updateActivity(event);
+
         System.out.println(currency.getName() + ": " + currency.getPrice());
         this.currency = currency;
     }
 
+    // sets which cryptocurrency the discord bot is watching
     public void setCryptoType(Type cryptoType, MessageCreateEvent event) {
+        this.event = event;
         this.cryptoType = cryptoType;
         createCryptoObject();
         updateActivity(event);
