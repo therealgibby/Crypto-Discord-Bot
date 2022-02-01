@@ -19,22 +19,12 @@ import java.text.DecimalFormat;
 @Service
 public class CryptoService {
 
-    public enum Type {
-        BTC("Bitcoin"), ETH("Ethereum"), ADA("Cardano"), DOGE("Dogecoin");
-
-        String name;
-
-        Type(String str) {
-            name = str;
-        }
-    }
-
     private static final String CRYPTO_URL = "https://api.coinstats.app/public/v1/coins?skip=0&limit=20&currency=USD";
     private final HttpClient client = HttpClient.newHttpClient();
     private final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(CRYPTO_URL)).build();
 
     private Currency currency;
-    private Type cryptoType = Type.BTC;
+    private CryptoType cryptoType = CryptoType.BTC;
 
     private HttpResponse<String> createResponse() {
         HttpResponse<String> response = null;
@@ -111,7 +101,7 @@ public class CryptoService {
     }
 
     // sets which cryptocurrency the discord bot is watching
-    public void setCryptoType(Type cryptoType, MessageCreateEvent event) {
+    public void setCryptoType(CryptoType cryptoType, MessageCreateEvent event) {
         this.cryptoType = cryptoType;
         createCryptoObject();
         updateActivity(event);
@@ -121,7 +111,7 @@ public class CryptoService {
         event.getApi().updateActivity(ActivityType.WATCHING, this.currency.getName() + ": $" + this.currency.getPrice());
     }
 
-    public Type getCryptoType() {
+    public CryptoType getCryptoType() {
         return cryptoType;
     }
 
