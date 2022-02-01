@@ -36,9 +36,6 @@ public class CryptoService {
     private Currency currency;
     private Type cryptoType = Type.BTC;
 
-    // use event to get discord api
-    private MessageCreateEvent event;
-
     private HttpResponse<String> createResponse() {
         HttpResponse<String> response = null;
 
@@ -78,6 +75,8 @@ public class CryptoService {
         JsonArray jsonArray = jsonObject.get("coins").getAsJsonArray();
 
         JsonObject currencyJsonObj = null;
+
+        // find cryptocurrency that corresponds with the cryptoType
         for(int i = 0; i < jsonArray.size(); i++) {
             currencyJsonObj = jsonArray.get(i).getAsJsonObject();
             if(currencyJsonObj.get("name").getAsString().equals(cryptoType.name))
@@ -104,10 +103,8 @@ public class CryptoService {
         currency.setName(jsonCurrency.get("name").getAsString());
 
         // format the price and set it as the currency price
-        String cardanoPriceStr = new DecimalFormat("0.000").format(jsonCurrency.get("price").getAsDouble());
-        currency.setPrice(Double.parseDouble(cardanoPriceStr));
-
-        updateActivity(event);
+        String cryptoPriceStr = new DecimalFormat("0.000").format(jsonCurrency.get("price").getAsDouble());
+        currency.setPrice(Double.parseDouble(cryptoPriceStr));
 
         System.out.println(currency.getName() + ": " + currency.getPrice());
         this.currency = currency;
@@ -115,7 +112,6 @@ public class CryptoService {
 
     // sets which cryptocurrency the discord bot is watching
     public void setCryptoType(Type cryptoType, MessageCreateEvent event) {
-        this.event = event;
         this.cryptoType = cryptoType;
         createCryptoObject();
         updateActivity(event);
