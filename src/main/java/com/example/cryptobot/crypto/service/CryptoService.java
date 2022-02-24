@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 @Service
 public class CryptoService {
 
-    private Currency currency;
+    private final Currency currency = new Currency();
     private CryptoType cryptoType = CryptoType.BTC;
 
     // finds the correct cryptocurrency
