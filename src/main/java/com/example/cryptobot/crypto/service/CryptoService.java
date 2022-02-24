@@ -6,57 +6,22 @@ import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.text.DecimalFormat;
 
 @Service
 public class CryptoService {
 
-    private static final String CRYPTO_URL = "https://api.coinstats.app/public/v1/coins?skip=0&limit=20&currency=USD";
-    private final HttpClient client = HttpClient.newHttpClient();
-    private final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(CRYPTO_URL)).build();
-
     private Currency currency;
     private CryptoType cryptoType = CryptoType.BTC;
 
-    private HttpResponse<String> createResponse() {
-        HttpResponse<String> response = null;
-
-        try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return response;
-    }
-
     // finds the correct cryptocurrency
-    private JsonObject createJsonObject(HttpResponse<String> response) {
+    private JsonObject createJsonObject() {
 
-        JsonElement element = null;
+        // call public api for information on the cryptocurrency
+        String response = CoinStatsService.createResponse();
 
-        // if response is null
-        if(response == null) {
-            try {
-                // first parse response
-                element = JsonParser.parseReader(new FileReader("src/main/resources/response.json"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            // first parse response
-            element = JsonParser.parseString(response.body());
-        }
+        // first parse response
+        JsonElement element = JsonParser.parseString(response);
 
         // next get as json object
         JsonObject jsonObject = element.getAsJsonObject();
@@ -76,15 +41,11 @@ public class CryptoService {
     }
 
     // use json object to create currency object
-    @PostConstruct
     @Scheduled(fixedRate = 25000)
     public void createCryptoObject() {
 
-        // call public api for information on the cryptocurrency
-        HttpResponse<String> response = createResponse();
-
         // create the json object of the currency
-        JsonObject jsonCurrency = createJsonObject(response);
+        JsonObject jsonCurrency = createJsonObject();
 
         // create currency object
         Currency currency = new Currency();

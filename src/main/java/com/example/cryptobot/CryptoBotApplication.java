@@ -5,7 +5,6 @@ import com.example.cryptobot.listeners.CryptoTypeListener;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
-import org.javacord.api.event.message.MessageCreateEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -36,7 +35,6 @@ public class CryptoBotApplication {
 
 	@Bean
 	@ConfigurationProperties(value = "discord-api")
-
 	public DiscordApi discordApi() throws IOException, InterruptedException {
 		String token = env.getProperty("TOKEN");
 		DiscordApi api = new DiscordApiBuilder().setToken(token).setAllNonPrivilegedIntents().login().join();
