@@ -47,18 +47,14 @@ public class CryptoService {
         // create the json object of the currency
         JsonObject jsonCurrency = createJsonObject();
 
-        // create currency object
-        Currency currency = new Currency();
-
         // set the currency name
-        currency.setName(jsonCurrency.get("name").getAsString());
+        this.currency.setName(jsonCurrency.get("name").getAsString());
 
         // format the price and set it as the currency price
         String cryptoPriceStr = new DecimalFormat("0.000").format(jsonCurrency.get("price").getAsDouble());
-        currency.setPrice(Double.parseDouble(cryptoPriceStr));
+        this.currency.setPrice(Double.parseDouble(cryptoPriceStr));
 
-        System.out.println(currency.getName() + ": " + currency.getPrice());
-        this.currency = currency;
+        System.out.println(this.currency.getName() + ": " + this.currency.getPrice());
     }
 
     // sets which cryptocurrency the discord bot is watching
