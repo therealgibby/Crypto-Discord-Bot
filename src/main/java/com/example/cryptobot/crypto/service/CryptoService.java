@@ -13,12 +13,17 @@ public class CryptoService {
 
     private final Currency currency = new Currency();
     private CryptoType cryptoType = CryptoType.BTC;
+    private CoinStatsService coinStatsService;
+
+    public CryptoService(CoinStatsService coinStatsService) {
+        this.coinStatsService = coinStatsService;
+    }
 
     // finds the correct cryptocurrency
     private JsonObject createJsonObject() {
 
         // call public api for information on the cryptocurrency
-        String response = CoinStatsService.createResponse();
+        String response = coinStatsService.createResponse();
 
         // first parse response
         JsonElement element = JsonParser.parseString(response);
@@ -41,7 +46,7 @@ public class CryptoService {
     }
 
     // use json object to create currency object
-    @Scheduled(fixedRate = 25000)
+    @Scheduled(fixedRate = 10000)
     public void createCryptoObject() {
 
         // create the json object of the currency
